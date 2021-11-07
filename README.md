@@ -12,3 +12,13 @@ Assignment of digital integrated circuit design course of Peking University - FP
 
 ![](0.Images/hw1-2.png)
 
+## Homework2
+
+ALU设计：完成一个32位ALU设计并进行功能验证。
+
+![](0.Images/hw2-1.png)
+
+ALU计算溢出的判断方法
+
+![](0.Images/hw2-2.png)
+
