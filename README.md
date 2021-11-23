@@ -30,3 +30,6 @@ ALU计算溢出的判断方法
 
 ![](0.Images/hw3-3.png)
 
+## Homework4
+
+![](0.Images/hw4-1.png)
