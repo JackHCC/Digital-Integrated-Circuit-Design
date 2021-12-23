@@ -42,9 +42,15 @@ ALU计算溢出的判断方法
 
 ![](0.Images/hw6-1.png)
 
+## Ext-Homework
 
+设计一个简单的闹钟：详细设计见：[Timer](./7.Ext_Homework_Timer/README.md)
 
+![](0.Images/hw7-1.png)
 
+## Better Solution
+
+参考Part8：`8.Homework_Upgrade_Solution`目录下的解决办法。
 
 
 
