@@ -50,7 +50,14 @@ ALU计算溢出的判断方法
 
 ## Better Solution
 
-参考Part8：`8.Homework_Upgrade_Solution`目录下的解决办法。
+参考Part8：[`8.Homework_Upgrade_Solution`](./8.Homework_Upgrade_Solution)目录下的解决办法。
 
 
+
+## Practice
+
+一些练习与解题思路的八股总结：👉[见这里](./9.Practice/README.md)
+
+- 状态机的基本解题步骤
+- D触发器和组合逻辑电路转化为Verilog代码
 
