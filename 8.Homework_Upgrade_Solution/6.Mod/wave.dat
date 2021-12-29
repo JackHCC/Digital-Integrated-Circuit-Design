@@ -1,0 +1,13 @@
+                   0dmod = xxxxx, mod_en = 0, rd = x
+                   4dmod = xxxxx, mod_en = 0, rd = 0
+                  15dmod = 00000, mod_en = 1, rd = 1
+                  25dmod = 00000, mod_en = 1, rd = 0
+                  35dmod = 00000, mod_en = 1, rd = 1
+                  45dmod = 00100, mod_en = 1, rd = 1
+                  55dmod = 10000, mod_en = 1, rd = 0
+                  65dmod = 00001, mod_en = 1, rd = 1
+                  75dmod = 10100, mod_en = 1, rd = 0
+                  85dmod = 00000, mod_en = 1, rd = 1
+                  95dmod = 00111, mod_en = 1, rd = 1
+                 105dmod = 00000, mod_en = 1, rd = 0
+                 115dmod = 00010, mod_en = 1, rd = 1
