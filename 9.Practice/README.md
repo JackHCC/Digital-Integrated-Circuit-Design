@@ -20,7 +20,28 @@
 
 ![](../0.Images/pr4-1.png)
 
+## Practice5
 
+D 型主从触发器电路如下图所示，请用 verilog 语言对其进行门级描述。
+
+![](../0.Images/pr5-1.png)
+
+## Practice6
+
+![](../0.Images/pr6-1.png)
+
+## Practice7
+
+一个 32×8 的异步 SRAM 的外部端口如图所示，其读写信号时序图如图（时间 单位 ns)所示。
+
+1. 试建立此 SRAM 的 Verilog 行为模型。
+2. 给出此 SRAM 模型的测试程序，要求测试程序使用 task：
+   1. 向地址 12 写入 8’H55，地址 13 写 8’HAA。 
+   2. 再读取地址 12 和 13 的数据。
+
+![](../0.Images/pr7-1.png)
+
+![](../0.Images/pr8-1.png)
 
 # Solution Conclusion
 
@@ -158,4 +179,195 @@ always @(posedge wr_en) begin
     mem[head]   = data_in;
 end 
 ```
+
+双向驱动建模：
+
+- 注意：inout类型端口只能只能声明wire类型，只能用assign赋值
+
+![](../0.Images/re-7.png)
+
+## 除法器设计
+
+
+
+
+
+# Tips
+
+## SHM波形数据库
+
+波形显示工具从数据库，如SHM数据库中读取数据。使用下面的系统任务可以对SHM数据库进行操作：
+
+| 系统任务                  | 描述                                         |
+| ------------------------- | -------------------------------------------- |
+| \$shm_open(“waves.shm”);  | 打开一个仿真数据库。同时只能打开一个库写入。 |
+| \$shm_probe();            | 选择信号，当它们的值变化时写入仿真库         |
+| \$shm_close;  \$shm_save; | 关闭仿真库  将仿真数据库写到磁盘             |
+
+```verilog
+initial
+begin
+    $shm_open(“./data/lab.shm”);
+    $shm_probe( );
+end
+```
+
+#### 用$shm_probe设置信号探针
+
+- \$shm_probe的语法：
+
+  \$shm_probe(scope0, node0, scope1, node1, ...);
+
+  - 每个node都是基于前面scope的说明(层次化的）
+  - scope参数缺省值为当前范围(scope)。node参数缺省值为指定范围的所有输入、输出及输入输出。
+
+![](../0.Images/re-1)
+
+### 模块实例化
+
+![](../0.Images/re-2)
+
+在\$shm_probe中使用scope/node对作为参数。参数可以使用缺省值或两个参数都设置。例如：
+
+- \$shm_probe( ); 观测当前范围(scope)所有端口
+
+- $shm_probe(“A”); 观测当前范围所有节点
+
+- \$shm_probe(alu, adder); 观测实例alu和adder的所有端口
+
+- \$shm_probe(“S”, top.alu, “AC”); 观测：
+
+  (1): 当前范围及其以下所有端口，除库单元
+
+  (2):top.alu模块及其以下所有节点，包括库单元
+
+## VCD数据库
+
+Verilog提供一系列系统任务用于记录信号值变化保存到标准的VCD(Value Change Dump)格式数据库中。大多数波形显示工具支持VCD格式。
+
+![](../0.Images/re-3)
+
+VCD数据库是仿真过程中数据信号变化的记录。它只记录用户指定的信号。
+
+- 用户可以用*\$dump*系统任务打开一个数据库，保存信号并控制信号的保存。除*\$dumpvars*外，其它任务的作用都比较直观。 *\$dumpvars*将在后面详细描述*。*
+- 必须首先使用*\$dumpfile*系统任务，并且在一次仿真中只能打开一个VCD数据库。
+- 在仿真前(时间0前)必须先指定要观测的信号，这样才能看到信号完整的变化过程。
+- 仿真时定期的将数据保存到磁盘是一个好的习惯，万一系统出现问题数据也不会全部丢失。
+- VCD数据库不记录仿真结束时的数据。因此如果希望看到最后一次数据变化后的波形，必须在结束仿真前使用*\$dumpall*。
+
+要给\$dumpvars提供层次(levels)及范围(scope)参数，例如
+
+```verilog
+$dumpvars;   // Dump所有层次的信号
+$dumpvars (1, top); // Dump top模块中的所有信号
+$dumpvars (2, top.u1); // Dump实例top. u1及其下一层的信号
+$dumpvars (0, top.u2, top.u1.u13.q); // Dump top.u2及其以下所有信号，以及信号top.u1.u13.q。
+$dumpvars (3, top.u2, top.u1); // Dump top.u1和top.u2及其下两层中的所有信号。
+```
+
+用下面的代码可以代替前面test fixture的*\$monitor*命令:
+
+```verilog
+initial
+        begin
+            $dumpfile (“verilog.dump”);
+            $dumpvars (0, testfixture);
+    	end
+```
+
+### $dumpvars语法
+
+![](../0.Images/re-4)
+
+## File Output
+
+```verilog
+. . .
+integer MCD1;
+    MCD1 = $fopen("<name_of_file>");
+    $fdisplay( MCD1, P1, P2, .., Pn);
+    $fwrite( MCD1, P1, P2, .., Pn);
+    $fstrobe( MCD1, P1, P2, .., Pn);
+    $fmonitor( MCD1, P1, P2, .., Pn);
+    $fclose( MCD1);
+. . .
+```
+
+- $fopen打开一个文件并返回一个多通道描述符（MCD）。
+
+  - MCD是与文件唯一对应的32位无符号整数。
+
+  - 如果文件不能打开并进行写操作，MCD等于0。
+
+  - 如果文件成功打开，MCD中的一位被置位。
+
+- 以\$f开始的显示系统任务将输出写入与MCD相对应的文件中。 
+
+- \$fopen打开参数中指定的文件并返回一个32位无符号 整数MCD，MCD是与文件一一对应的多通道描述符。如果文件不能打开并进行写操作，它返回0。
+- $fclose关闭MCD指定的通道。
+- 输出信息到log文件和标准输出的四个格式化显示任务(\$display, \$write, \$monitor, \$strobe）都有相对应的任务用于向指定文件输出。
+- 这些对应的任务（\$fdisplay,\$fwrite,\$fmonitor,\$fstrobe）的参数形式与对应的任务相同，只有一个例外：第一个参数必须是一个指定向何哪个文件输出的MCD。MCD可以是一个表达式，但其值必须是一个32位的无符号整数。这个值决定了该任务向哪个打开的文件写入。
+- MCD可以看作由32个标志构成的组，每个标志代表一个单一的输出通道。
+
+![](../0.Images/re-5)
+
+## File Input
+
+- Verilog中有两个系统任务可以将数据文件读入寄存器组。一个读取二进制数据，另一个读取十六进制数据：
+
+- \$readmemb
+
+  \$readmemb ("file_name", <memory_name>);
+
+  \$readmemb ("file_name", <memory_name>, <start_addr>);
+
+  \$readmemb ("file_name", <memory_name>, <start_addr>, <finish_addr>);
+
+- $readmemh
+
+  \$readmemh (" file_name", <memory_name>);
+
+  \$readmemh (" file_name", <memory_name>, <start_addr>);
+
+  \$readmemh (" file_name", <memory_name>, <start_addr>, <finish_addr>);
+
+系统任务\$readmemb和\$readmemh从一个文本文件读取数据并写入存储器。
+
+- 如果数据为二进制，使用\$readmemb；如果数据为十六进制，使用\$readmemh。
+- filename指定要读入的文件。
+- mem_name指定存储器信号名称。
+- start和finish给出存储器加载的地址。Start为开始地址，finish为结束地址。如果不指定开始和结束地址，\$readmem按从低端开始读入数据，与说明顺序无关。
+
+```
+$readmemb和$readmemh的文件格式 ：
+            $readmemb("mem_file. txt", mema);
+```
+
+- 可以指定二进制（b）或十六进制（h）数
+- 用下划线“_”提高可读性。
+- 可以包含单行或多行注释。
+- 可以用空格和换行区分各个数据。
+- **可以给后面的值设定一个特定的地址**，格式为：
+  -    @(hex_address)
+       - 十六进制地址的大小写不敏感。
+       - **在@和数字之间不允许有空格。** 
+
+![](../0.Images/re-6)
+
+## 设计代码流程与总结：
+
+1. 撰写design代码（正常写法与状态机写法，注意变量类型）
+2. 撰写testbench（注意变量类型，测试全面，校验代码），考虑时钟，激励方式等
+3. 考虑将一些冗余代码修改为Task，函数等高级形式撰写
+4. 参数化变量，task或function
+5. 合理增加注释，注解，检查变量命名合理性
+6. 增加关键变量的信息打印（monitor，display，write等），并考虑将其写入日志文件
+7. 使用shm或vcd库记录波形数据，或者通过文件输入输出写到磁盘文件里
+8. specify时序设置，时序检查setup，hold等
+
+
+
+
+
+
 
