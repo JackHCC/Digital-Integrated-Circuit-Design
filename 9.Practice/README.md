@@ -470,7 +470,65 @@ $readmemb和$readmemh的文件格式 ：
 
 👆上述要点用法测试程序见：👉[Mod_tb程序](../8.Homework_Upgrade_Solution/6.Mod/Mod_tb.v)(测试了VCD，File Output，File Input)和[mod_fsm程序](../8.Homework_Upgrade_Solution/6.Mod/data_mod_fsm.v)👈（测试Specify），其中SHM软件不支持。
 
+# Some Points
 
+## 行波进位加法器（RPL/RCA）
+
+- g = a · b	(generate)	
+- p = a ^ b   (propagate)
+- c = g + p · ci
+- s = p ^ ci
+
+## 4位超前进位加法器（CLA）
+
+![](../0.Images/re2-1.png)
+
+## Task基本使用
+
+```verilog
+module mult (
+	input wire 			clk ,
+						en_mult ,
+	input wire [3: 0] 	a ,
+						b ,
+	output reg [7: 0] 	out
+);
+	always @( posedge clk)
+		multme (a, b, out);
+		
+	task multme; // 任务定义
+	input [3: 0] 	xme,
+					tome;
+    output [7: 0] 	result;	
+    // 注意task语句多余一个需要加begin……end
+	wait (en_mult)	
+		result = xme * tome;
+	endtask
+endmodule
+```
+
+## Function基本使用
+
+```verilog
+module foo(
+	input 	[7: 0] 	loo,
+	output 	[3: 0] 	goo);
+	// 可以持续赋值中调用函数
+	wire [3: 0] goo = zero_count ( loo );
+	
+	function [3: 0] zero_count;
+		input [7: 0] in_ bus;
+		integer I;
+        // 注意begin……end
+		begin
+			zero_count = 0;
+			for (I = 0; I < 8; I = I + 1)
+				if (! in_bus[ I ])
+					zero_count = zero_count + 1;
+`		end
+	endfunction
+endmodule
+```
 
 
 
