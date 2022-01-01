@@ -44,7 +44,7 @@ ALU计算溢出的判断方法
 
 ## Ext-Homework
 
-设计一个简单的闹钟：详细设计见：[Timer](./7.Ext_Homework_Timer/README.md)
+设计一个简单的闹钟：详细设计见：[Timer](./7.Ext_Homework_Timer)
 
 ![](0.Images/hw7-1.png)
 
@@ -54,7 +54,7 @@ ALU计算溢出的判断方法
 
 ## Practice
 
-一些练习与解题思路的八股总结：👉[见这里](./9.Practice/README.md)
+一些练习与解题思路的八股总结：👉[见这里](./9.Practice)
 
 - 状态机的基本解题步骤
 - D触发器和组合逻辑电路转化为Verilog代码
